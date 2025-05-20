@@ -39,9 +39,12 @@ style_dict = {
 
 
 #introcude tabs
-tab1,tab2,tab3=st.tabs(["Portfolio Overview","Per Minute Portfolio Change","Daily Portfolio Change"])
-
+tab1,tab2,tab3,tab4=st.tabs(["Introdution","Portfolio Overview","Per Minute Portfolio Change","Daily Portfolio Change"])
 with tab1:
+    #st.write('Introcution Here')
+    st.markdown(open('intro.md').read())
+
+with tab2:
     col1, col2 = st.columns(2)
 
     with col1:
@@ -123,7 +126,6 @@ with tab1:
         centered_table = f"""
     <div style="display: flex; justify-content: center;">
         {html_table}
-    </div>
     """
         #st.markdown(df_fin.to_html(),unsafe_allow_html=True)
         st.markdown(f"<h2 style='text-align:center;color:magenta;font-weight:bold;font-family:monospace;font-size:35px'>RAW INPUT PORTFOLIO</h2>",unsafe_allow_html=True)
@@ -164,7 +166,6 @@ with tab1:
             centered_table1 = f"""
     <div style="display: flex; justify-content: center;">
         {html_table1}
-    </div>
     """
             st.markdown(centered_table1,unsafe_allow_html=True)
             #st.markdown(group_fin.to_html(),unsafe_allow_html=True)
@@ -196,7 +197,7 @@ with tab1:
             st.plotly_chart(bar_fig)
 
 
-with tab2:
+with tab3:
     #download yahoo data 
 
     debug=False
@@ -406,7 +407,7 @@ def is_business_day(date):
   '''
   return pd.to_datetime(date).weekday()<5
 
-with tab3:
+with tab4:
     #download yahoo data 
 
     #user input ticker, start_date, end_date,volume_threshold%,%change on the end date,holding period
