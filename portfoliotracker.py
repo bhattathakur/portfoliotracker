@@ -48,10 +48,12 @@ with tab1:
 
         st.markdown("✍️ **Manually enter your portfolio:** (One line per stock in format: `Ticker, Shares, Price`)")
         with st.form("Ticker Information Input"):
-            txt_area = st.text_area("", placeholder='AAPL,20,200',value='AAPL,100,100 \n NVDA,200,100')
+            txt_area = st.text_area("", placeholder='AAPL,20,200',value='AAPL,300,200 \nNVDA,200,100\nTSLA,50,250')
             submitted = st.form_submit_button("SUBMIT")
         st.markdown("**OR**")
-        st.markdown("📁 **Upload a CSV file** including your portfolio (one stock per line in format: `Ticker, Shares, Price`)")
+        st.markdown("📁 **Upload a CSV file** including your portfolio (one stock per line in format (INCLUDING THE HEADER): `Ticker, Shares, Price`) as an exampble below:")
+        st.text(" Ticker, Shares, Price \n AAPL,300,200\n NVDA,200,100\
+        ")
         file_uploaded = st.file_uploader("Choose a CSV file", type="csv")
         st.markdown("---")
 
@@ -124,6 +126,8 @@ with tab1:
     </div>
     """
         #st.markdown(df_fin.to_html(),unsafe_allow_html=True)
+        st.markdown(f"<h2 style='text-align:center;color:magenta;font-weight:bold;font-family:monospace;font-size:35px'>RAW INPUT PORTFOLIO</h2>",unsafe_allow_html=True)
+        #st.markdown("Your Raw Input")
         st.markdown(centered_table,unsafe_allow_html=True)
         #st.table(df)
 
@@ -183,7 +187,7 @@ with tab1:
 
             bar_fig.update_layout(
                 title={
-                    'text': "Number of Shares",
+                    'text': "Number of Shares in Portfolio",
                     'x': 0.5,
                     'xanchor': 'center'
                 }
@@ -242,6 +246,8 @@ with tab2:
     daily_df=data[data.index.date==date_radio]
 
     daily_df.index=daily_df.index.strftime("%m/%d-%H:%M")
+    #give index name as 'Datetime' if it is not an index as for some random generated multiple text it is not showing 'Datetime' in index and remaining part of the code is not working
+    if daily_df.index.name!='Datetime':daily_df.index.name='Datetime'
     if debug:st.dataframe(daily_df)
 
     for ticker in daily_df.columns.levels[0]:
@@ -267,6 +273,7 @@ with tab2:
 
     
     daily_df=daily_df.sort_index(axis=1)
+    debug=False
     if debug:st.write(f"index and column names:\n{daily_df.columns}\n{daily_df.index}")
     if debug:st.dataframe(daily_df)
 
@@ -280,7 +287,15 @@ with tab2:
     daily_df[('Total','MarketValue')]=market_value.sum(axis=1)
     daily_df[('Total','Investment')]=total_invest.sum(axis=1)
 
-    if debug:st.dataframe(daily_df)
+    debug=False
+
+    if debug:
+        st.dataframe(daily_df)
+        st.write(f"columns: {daily_df.columns}")
+        st.write(f"index  : {daily_df.index}")
+    debug=False
+
+    #st.stop()
 
 
     #return df
